@@ -1,0 +1,51 @@
+package com.bruno.adsaude.model;
+
+public class TipoServicio extends AbstractValueObject{
+	
+	private int id;
+	private String nombre;
+	private String descripcion;
+	private String tiempoEstimado;
+	private Integer idTipoServicio;
+	
+	
+	
+	public TipoServicio() {
+		
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+	public String getTiempoEstimado() {
+		return tiempoEstimado;
+	}
+
+	public void setTiempoEstimado(String tiempoEstimado) {
+		this.tiempoEstimado = tiempoEstimado;
+	}
+
+	public Integer getIdTipoServicio() {
+		return idTipoServicio;
+	}
+	public void setIdTipoServicio(Integer l) {
+		this.idTipoServicio = l;
+	}
+	
+
+}
