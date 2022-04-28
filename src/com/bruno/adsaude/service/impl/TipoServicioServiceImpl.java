@@ -27,6 +27,41 @@ public class TipoServicioServiceImpl implements TipoServicioService{
 	}
 	
 	@Override
+	public TipoServicio findById(Integer id) throws DataException, ServiceException {
+		Connection c = null;
+		TipoServicio tipoServicio = null;
+		boolean commitOrRollback = false;
+		try  {
+			c = ConnectionManager.getConnection();					
+			
+			c.setAutoCommit(false);
+			
+			tipoServicio = tipoServicioDAO.findById(c, id);
+			
+									
+			commitOrRollback = true;
+			
+
+		} catch (SQLException sqle) {
+			logger.error(id, sqle);
+			throw new ServiceException(id+"", sqle);
+			
+		} catch (DataException de) { // si viene del DAO ya seria innecesario
+			logger.error(id, de);	
+			throw de;
+			
+		} catch (Exception e) {
+			logger.error(id, e);
+			throw new ServiceException(e);
+			
+		} finally {
+			JDBCUtils.closeConnection(c, commitOrRollback);
+		}
+		return tipoServicio;		
+	}
+
+	
+	@Override
 	public List<TipoServicio> findBy() throws DataException, ServiceException {
 		Connection c = null;
 		List<TipoServicio> tipoServicio = null;

@@ -91,7 +91,7 @@ public class IncidenciaServiceTest {
 		IncidenciaServiceTest test = new IncidenciaServiceTest();
 		//test.testFindByDate(); //no saca datos
 		//test.testFindByAsistidoAfectado(); //no saca datos
-		test.testFindByCreador(); // no saca datos
+		test.testFindByCreador(); 
 		//test.testCreate();
 
 	}

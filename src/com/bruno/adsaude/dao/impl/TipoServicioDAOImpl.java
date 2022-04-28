@@ -23,6 +23,43 @@ public class TipoServicioDAOImpl implements TipoServicioDAO{
 	public TipoServicioDAOImpl() {
 		
 	}
+	
+	@Override
+	public  TipoServicio findById(Connection c, int id) throws DataException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		TipoServicio tipoServicio = null;
+		try {
+									
+			String sql = "SELECT ID, NOMBRE, DESCRIPCION, TIEMPO_ESTIMADO ,ID_TIPO_SERVICIO  "
+					+ " FROM TIPO_SERVICIO "
+					+ " WHERE ID= ? ";
+			// Create prepared statement
+			stmt = c.prepareStatement(sql);
+			int i;
+			i=1;
+			JDBCUtils.setParameter(stmt, i++, id);
+			// Performing operation
+	
+			
+			rs = stmt.executeQuery();					
+			while (rs.next()) {				
+				tipoServicio = loadNext(rs);										
+			}	
+			
+		} catch (SQLException e) {			
+			logger.error(id, e);
+			throw new DataException("Tipo servicio find by"+id, e);
+		} finally {
+			JDBCUtils.closeResultSet(rs);
+			JDBCUtils.closePreparedStatement(stmt);	
+		}	
+		
+		return  tipoServicio;
+	}
+	
+	
+	
 	@Override
 	public  List<TipoServicio> findBy(Connection c) throws DataException {
 		PreparedStatement stmt = null;

@@ -66,6 +66,39 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		}
 		return empleado;	
 	}
+	
+	@Override
+	public EmpleadoDTO findByEmail(String email) throws DataException, ServiceException {
+		Connection c = null;
+		EmpleadoDTO empleado = null;
+		boolean commitOrRollback = false;
+		try  {
+			c = ConnectionManager.getConnection();					
+			
+			c.setAutoCommit(false);
+			
+			empleado = empleadoDAO.findByEmail(c, email);
+								
+			commitOrRollback = true;
+			
+
+		} catch (SQLException sqle) {
+			logger.error(email, sqle);
+			throw new ServiceException(email+"", sqle);
+			
+		} catch (DataException de) { // si viene del DAO ya seria innecesario
+			logger.error(email, de);	
+			throw de;
+			
+		} catch (Exception e) {
+			logger.error(email, e);
+			throw new ServiceException(e);
+			
+		} finally {
+			JDBCUtils.closeConnection(c, commitOrRollback);
+		}
+		return empleado;	
+	}
 
 	@Override
 	public List<EmpleadoDTO> findByServicio(int idTipoServicio) throws DataException, ServiceException {

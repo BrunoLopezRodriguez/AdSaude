@@ -7,4 +7,6 @@ import com.bruno.adsaude.model.MedicoDTO;
 public interface MedicoService {
 
 	public  MedicoDTO login(String email, String password) throws DataException, ServiceException;
+	
+	public MedicoDTO findByEmail(String email) throws DataException, ServiceException;
 }

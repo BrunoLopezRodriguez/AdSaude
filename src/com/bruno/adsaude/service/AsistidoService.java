@@ -16,6 +16,8 @@ public interface AsistidoService {
 	
 	public AsistidoDTO findByDni(String dni) throws DataException, ServiceException;
 	
+	public AsistidoDTO findByEmail(String email) throws DataException, ServiceException;
+	
 	public  List<AsistidoDTO> findByRuta ( int idRuta) throws DataException, ServiceException;
 	
 	public  Integer create (Asistido asistido) throws DataException, ServiceException;

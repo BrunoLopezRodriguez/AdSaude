@@ -9,6 +9,8 @@ import com.bruno.adsaude.model.TipoServicioDTO;
 
 public interface TipoServicioDAO {
 	
+	public TipoServicio findById(Connection c, int id) throws DataException;
+	
 	public  List<TipoServicio> findBy(Connection c) throws DataException;
 	
 	public  List<TipoServicio> findByPadre(Connection c) throws DataException;

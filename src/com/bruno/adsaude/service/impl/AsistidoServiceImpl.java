@@ -139,6 +139,39 @@ public class AsistidoServiceImpl implements AsistidoService {
 	}
 	
 	@Override
+	public AsistidoDTO findByEmail(String email) throws DataException, ServiceException {
+		Connection c = null;
+		AsistidoDTO asistido = null;
+		boolean commitOrRollback = false;
+		try  {
+			c = ConnectionManager.getConnection();					
+			
+			c.setAutoCommit(false);
+			
+			asistido = asistidoDAO.findByEmail(c, email);
+								
+			commitOrRollback = true;
+			
+
+		} catch (SQLException sqle) {
+			logger.error(email, sqle);
+			throw new ServiceException(email+"", sqle);
+			
+		} catch (DataException de) { // si viene del DAO ya seria innecesario
+			logger.error(email, de);	
+			throw de;
+			
+		} catch (Exception e) {
+			logger.error(email, e);
+			throw new ServiceException(e);
+			
+		} finally {
+			JDBCUtils.closeConnection(c, commitOrRollback);
+		}
+		return asistido;	
+	}
+	
+	@Override
 	public List<AsistidoDTO> findByRuta(int idRuta) throws DataException, ServiceException {
 		Connection c = null;
 		List<AsistidoDTO> asistido = null;
@@ -222,14 +255,16 @@ public class AsistidoServiceImpl implements AsistidoService {
 
 			c.setAutoCommit(false);
 
-			if (asistido.getPassword()!=null) {
+			if (asistido.getPasswordEncriptada()!=null) {
 				
-			}
-
-			password= PasswordEncryptionUtil.encryptPassword(asistido.getPassword());
+				asistido.setPassword(asistido.getPasswordEncriptada());
 			
-
+			}else {
+				
+			password= PasswordEncryptionUtil.encryptPassword(asistido.getPassword());
 			asistido.setPassword(password);
+			}
+			
 			asistidoDAO.update(c, asistido);
 
 			commitOrRollback = true;

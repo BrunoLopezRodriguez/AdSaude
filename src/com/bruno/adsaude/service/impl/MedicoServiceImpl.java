@@ -64,5 +64,39 @@ public class MedicoServiceImpl implements MedicoService{
 		}
 		return medico;	
 	}
+	
+	@Override
+	public MedicoDTO findByEmail(String email) throws DataException, ServiceException {
+		Connection c = null;
+		MedicoDTO medico = null;
+		boolean commitOrRollback = false;
+		try  {
+			c = ConnectionManager.getConnection();					
+			
+			c.setAutoCommit(false);
+			
+			medico = medicoDAO.findByEmail(c, email);
+								
+			commitOrRollback = true;
+			
+
+		} catch (SQLException sqle) {
+			logger.error(email, sqle);
+			throw new ServiceException(email+"", sqle);
+			
+		} catch (DataException de) { // si viene del DAO ya seria innecesario
+			logger.error(email, de);	
+			throw de;
+			
+		} catch (Exception e) {
+			logger.error(email, e);
+			throw new ServiceException(e);
+			
+		} finally {
+			JDBCUtils.closeConnection(c, commitOrRollback);
+		}
+		return medico;	
+	}
+	
 
 }

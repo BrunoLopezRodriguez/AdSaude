@@ -15,6 +15,8 @@ public interface FamiliarService {
 	
 	public FamiliarDTO findByDni(String dni) throws DataException, ServiceException;
 	
+	public FamiliarDTO findByEmail(String email) throws DataException, ServiceException;
+	
 	public  Integer create (Familiar familiar)throws DataException, ServiceException;
 	
 	public  int update(Familiar familiar)throws DataException, ServiceException;

@@ -9,10 +9,12 @@ import com.bruno.adsaude.model.EmpleadoDTO;
 
 public interface EmpleadoService {
 	
-	public  EmpleadoDTO login(String email, String password) throws DataException, ServiceException;
+	public EmpleadoDTO login(String email, String password) throws DataException, ServiceException;
 	
-	public  List<EmpleadoDTO> findByServicio (int idTipoServicio)throws DataException, ServiceException;
+	public EmpleadoDTO findByEmail(String email) throws DataException, ServiceException;
 	
-	public  int update(Empleado empleado)throws DataException, ServiceException;
+	public List<EmpleadoDTO> findByServicio (int idTipoServicio)throws DataException, ServiceException;
+	
+	public int update(Empleado empleado)throws DataException, ServiceException;
 
 }

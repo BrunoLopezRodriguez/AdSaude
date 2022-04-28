@@ -11,6 +11,7 @@ public class UsuarioDTO extends AbstractValueObject{
 	private String tlf;
 	private String email;
 	private String password;
+	private String passwordEncriptada;
 	private String domicilio;
 	private int tipo;
 	
@@ -80,6 +81,14 @@ public class UsuarioDTO extends AbstractValueObject{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getPasswordEncriptada() {
+		return passwordEncriptada;
+	}
+
+	public void setPasswordEncriptada(String passwordEncriptada) {
+		this.passwordEncriptada = passwordEncriptada;
 	}
 
 	public String getDomicilio() {

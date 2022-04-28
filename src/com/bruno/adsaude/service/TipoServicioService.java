@@ -8,6 +8,8 @@ import com.bruno.adsaude.model.TipoServicio;
 import com.bruno.adsaude.model.TipoServicioDTO;
 
 public interface TipoServicioService {
+	
+	public  TipoServicio findById(Integer id) throws DataException, ServiceException;	
 
 	public  List<TipoServicio> findBy()throws DataException, ServiceException;
 	

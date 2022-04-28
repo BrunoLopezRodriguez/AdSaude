@@ -98,6 +98,40 @@ public class FamiliarServiceImpl implements FamiliarService{
 	}
 	
 	@Override
+	public FamiliarDTO findByEmail(String email) throws DataException, ServiceException {
+		Connection c = null;
+		FamiliarDTO familiar = null;
+		boolean commitOrRollback = false;
+		try  {
+			c = ConnectionManager.getConnection();					
+			
+			c.setAutoCommit(false);
+			
+			familiar = familiarDAO.findByEmail(c, email);
+								
+			commitOrRollback = true;
+			
+
+		} catch (SQLException sqle) {
+			logger.error(email, sqle);
+			throw new ServiceException(email+"", sqle);
+			
+		} catch (DataException de) { // si viene del DAO ya seria innecesario
+			logger.error(email, de);	
+			throw de;
+			
+		} catch (Exception e) {
+			logger.error(email, e);
+			throw new ServiceException(e);
+			
+		} finally {
+			JDBCUtils.closeConnection(c, commitOrRollback);
+		}
+		return familiar;	
+	}
+	
+	
+	@Override
 	public FamiliarDTO login(String email, String password) throws DataException, ServiceException {
 		Connection c = null;
 		FamiliarDTO familiar = null;

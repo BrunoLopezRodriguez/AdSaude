@@ -11,10 +11,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bruno.adsaude.dao.AsistenciaDAO;
+import com.bruno.adsaude.dao.util.DAOUtils;
 import com.bruno.adsaude.dao.util.JDBCUtils;
 import com.bruno.adsaude.exception.DataException;
 import com.bruno.adsaude.model.AsistenciaCriteria;
 import com.bruno.adsaude.model.AsistenciaDTO;
+import com.bruno.adsaude.model.Results;
 
 public class AsistenciaDAOImpl implements AsistenciaDAO{
 	
@@ -25,10 +27,10 @@ public class AsistenciaDAOImpl implements AsistenciaDAO{
 	}
 
 	@Override
-	public List<AsistenciaDTO> findByCriteria(Connection c, AsistenciaCriteria cr) throws DataException {
+	public Results<AsistenciaDTO> findByCriteria(Connection c, AsistenciaCriteria cr,  int startIndex, int pageSize) throws DataException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		List<AsistenciaDTO> asistencia = null;
+		Results<AsistenciaDTO> results = new Results<AsistenciaDTO>();
 		try {
 			// Creating statement
 			StringBuilder sql = new StringBuilder("SELECT a.FECHA_HORA_INICIO, a.FECHA_HORA_FIN, a.ID_ASISTIDO,"
@@ -40,7 +42,8 @@ public class AsistenciaDAOImpl implements AsistenciaDAO{
 			
 			sql.append(JDBCUtils.queryCreator(cr));
 			String sqlS=sql.toString();
-			stmt = c.prepareStatement(sqlS);
+
+			stmt = c.prepareStatement(sqlS, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			int i;
 			i=1;
 			if (cr.getFechaHoraInicio()!=null) {
@@ -59,13 +62,20 @@ public class AsistenciaDAOImpl implements AsistenciaDAO{
 				JDBCUtils.setParameter(stmt, i++, cr.getIdEmpleado());
 			}
 			// Performing operation
-			rs = stmt.executeQuery();		
-			asistencia = new ArrayList <AsistenciaDTO>();
+			rs = stmt.executeQuery();	
+			List<AsistenciaDTO> asistencias = new ArrayList<AsistenciaDTO>();
 			AsistenciaDTO a=null;
-			while (rs.next()) {				
-				a = loadNext(rs);								
-				asistencia.add(a);										
-			}			
+			
+			int resultsLoaded = 0;
+			if((startIndex >=1) && rs.absolute(startIndex)) {
+				do {
+					a = loadNext(rs);	
+					asistencias.add(a);
+					resultsLoaded++;
+				}while (resultsLoaded<pageSize && rs.next());
+			}
+			 results.setData(asistencias);
+			 results.setTotal(DAOUtils.getTotalRows(rs));
 			
 		} catch (SQLException e) {			
 			logger.error(cr, e);
@@ -75,7 +85,7 @@ public class AsistenciaDAOImpl implements AsistenciaDAO{
 			JDBCUtils.closePreparedStatement(stmt);	
 		}	
 		
-		return  asistencia;
+		return  results;
 	}
 	
 	private static AsistenciaDTO loadNext(ResultSet rs)

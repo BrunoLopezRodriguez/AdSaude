@@ -111,9 +111,12 @@ public class FamiliarDAOImpl implements FamiliarDAO{
 		FamiliarDTO familiar = null;
 		try {
 			// Creating statement
-			String sql= "SELECT f.NOMBRE, f.APELLIDO1, f.APELLIDO2, f.NIF, f.DOMICILIO " 
+			String sql= "SELECT f.ID, f.NOMBRE, f.APELLIDO1, f.APELLIDO2, f.NIF, f.TLF, f.EMAIL, f.PASSWORD_ENCRYPTED, f.DOMICILIO, "
+					+ " f.ID_LOCALIDAD, l.NOMBRE "
 					+ " FROM FAMILIAR f "
-					+ " WHERE Upper(f.NIF) LIKE upper(%?%) ";
+					+ " INNER JOIN LOCALIDAD l"
+					+ " ON f.ID_LOCALIDAD=l.ID"
+					+ " WHERE Upper(f.NIF) LIKE upper(?) ";
 			// Create prepared statement
 						stmt = c.prepareStatement(sql);
 						int i;

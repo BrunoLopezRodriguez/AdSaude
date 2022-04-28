@@ -107,7 +107,7 @@ public class AsistidoServiceTest {
 	public static void main(String args[] ) {
 		AsistidoServiceTest test = new AsistidoServiceTest();
 		//test.testLogin();
-		//test.testFindByFamiliar();
+		test.testFindByFamiliar();
 		//test.testFindByRuta();
 		//test.testCreate();
 		//test.testUpdate();

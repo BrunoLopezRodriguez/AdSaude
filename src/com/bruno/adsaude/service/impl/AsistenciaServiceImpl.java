@@ -2,7 +2,6 @@ package com.bruno.adsaude.service.impl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +14,7 @@ import com.bruno.adsaude.exception.DataException;
 import com.bruno.adsaude.exception.ServiceException;
 import com.bruno.adsaude.model.AsistenciaCriteria;
 import com.bruno.adsaude.model.AsistenciaDTO;
+import com.bruno.adsaude.model.Results;
 import com.bruno.adsaude.service.AsistenciaService;
 
 public class AsistenciaServiceImpl implements AsistenciaService{
@@ -27,16 +27,16 @@ public class AsistenciaServiceImpl implements AsistenciaService{
 	}
 
 	@Override
-	public List<AsistenciaDTO> findByCriteria(AsistenciaCriteria cr) throws DataException, ServiceException {
+	public Results<AsistenciaDTO> findByCriteria(AsistenciaCriteria cr,  int startIndex, int pageSize) throws DataException, ServiceException {
 		Connection c = null;
-		List<AsistenciaDTO> asitencia = null;
+		Results<AsistenciaDTO> results = new Results<AsistenciaDTO>();
 		boolean commitOrRollback = false;
 		try  {
 			c = ConnectionManager.getConnection();					
 			
 			c.setAutoCommit(false);
 			
-			asitencia = asistenciaDAO.findByCriteria(c, cr);
+			results = asistenciaDAO.findByCriteria(c, cr, startIndex, pageSize);
 								
 			commitOrRollback = true;
 			
@@ -56,7 +56,7 @@ public class AsistenciaServiceImpl implements AsistenciaService{
 		} finally {
 			JDBCUtils.closeConnection(c, commitOrRollback);
 		}
-		return asitencia;
+		return results;
 	}
 
 	
