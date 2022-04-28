@@ -137,9 +137,11 @@ public class IncidenciaServiceImpl implements IncidenciaService {
 			c = ConnectionManager.getConnection();								
 			
 			c.setAutoCommit(false);
-			incidenciaCreated = incidenciaDAO.create(c, incidencia);	
 			// Estado por defecto al crearla
-			incidenciaCreated.setIdTipoIncidencia(TipoIncidencia.ENVIADA);
+			incidencia.setIdTipoEstadoIncidencia(TipoIncidencia.ENVIADA);
+			
+			incidenciaCreated = incidenciaDAO.create(c, incidencia);	
+			
 			
 			commitOrRollback = true;
 		}catch (SQLException e) {
