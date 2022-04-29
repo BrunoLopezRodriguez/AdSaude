@@ -14,6 +14,8 @@ public interface AsistidoService {
 	
 	public  List<AsistidoDTO> findByFamiliar ( int idFamiliar) throws DataException, ServiceException;
 	
+	public  List<AsistidoDTO> findByMedico ( int idMedico) throws DataException, ServiceException;
+	
 	public AsistidoDTO findByDni(String dni) throws DataException, ServiceException;
 	
 	public AsistidoDTO findByEmail(String email) throws DataException, ServiceException;

@@ -11,6 +11,8 @@ public interface AsistidoDAO {
 	
 	public Asistido findById(Connection c, int id) throws DataException;
 	
+	public  List<AsistidoDTO> findByMedico(Connection c, int idMedico) throws DataException;
+	
 	public  AsistidoDTO findByEmail(Connection c, String email) throws DataException;
 	
 	public  List<AsistidoDTO> findByFamiliar (Connection c, int idFamiliar) throws DataException;

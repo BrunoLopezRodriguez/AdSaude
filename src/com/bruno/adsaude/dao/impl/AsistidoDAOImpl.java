@@ -61,6 +61,7 @@ public class AsistidoDAOImpl implements AsistidoDAO {
 		
 		return  asistido;
 	}
+
 	@Override
 	public  AsistidoDTO findByEmail(Connection c, String email) throws DataException {
 		PreparedStatement stmt = null;
@@ -131,6 +132,45 @@ public class AsistidoDAOImpl implements AsistidoDAO {
 		} catch (SQLException e) {			
 			logger.error(idFamiliar, e);
 			throw new DataException(""+idFamiliar, e);
+		} finally {
+			JDBCUtils.closeResultSet(rs);
+			JDBCUtils.closePreparedStatement(stmt);	
+		}	
+		
+		return  asistido;
+	}
+	@Override
+	public  List<AsistidoDTO> findByMedico (Connection c, int idMedico) throws DataException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<AsistidoDTO> asistido = null;
+		try {
+			// Creating statement
+			String sql= "SELECT a.ID, a.NOMBRE, a.APELLIDO1, a.APELLIDO2, a.NIF, a.TLF, a.EMAIL, a.PASSWORD_ENCRYPTED, "
+					+ " a.DOMICILIO, a.ID_MEDICO, m.NOMBRE, a.ID_LOCALIDAD, l.NOMBRE "
+					+ " FROM ASISTIDO a "
+					+ " INNER JOIN LOCALIDAD l "
+					+ " ON a.ID_LOCALIDAD=l.ID "
+					+ " INNER JOIN MEDICO m "
+					+ " ON m.ID=a.ID_MEDICO "
+					+ " WHERE a.ID_MEDICO = ? "
+					+ " ORDER BY a.NOMBRE ASC ";
+			stmt = c.prepareStatement(sql);
+			int i;
+			i=1;
+			JDBCUtils.setParameter(stmt, i++, idMedico);
+			// Performing operation
+			rs = stmt.executeQuery();		
+			asistido = new ArrayList <AsistidoDTO>();
+			AsistidoDTO a=null;
+			while (rs.next()) {				
+				a = loadNextDTO(rs);								
+				asistido.add(a);										
+			}			
+			
+		} catch (SQLException e) {			
+			logger.error(idMedico, e);
+			throw new DataException(""+idMedico, e);
 		} finally {
 			JDBCUtils.closeResultSet(rs);
 			JDBCUtils.closePreparedStatement(stmt);	

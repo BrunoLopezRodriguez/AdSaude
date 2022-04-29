@@ -100,7 +100,7 @@ public class ContratoTipoServicioDAOImpl implements ContratoTipoServicioDAO{
 				}
 			}
 			else {
-				throw new DataException("ListCTS");
+				throw new DataException("ListCTS"+contratoTipoServicio);
 			}
 		} catch (SQLException e) {
 			logger.error(contratoTipoServicio, e);

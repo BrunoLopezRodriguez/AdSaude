@@ -103,6 +103,39 @@ public class AsistidoServiceImpl implements AsistidoService {
 		}
 		return asistido;	
 	}
+	
+	@Override
+	public List<AsistidoDTO> findByMedico(int idMedico) throws DataException, ServiceException {
+		Connection c = null;
+		List<AsistidoDTO> asistido = null;
+		boolean commitOrRollback = false;
+		try  {
+			c = ConnectionManager.getConnection();					
+			
+			c.setAutoCommit(false);
+			
+			asistido = asistidoDAO.findByMedico(c, idMedico);
+								
+			commitOrRollback = true;
+			
+
+		} catch (SQLException sqle) {
+			logger.error(idMedico, sqle);
+			throw new ServiceException(idMedico+"", sqle);
+			
+		} catch (DataException de) { // si viene del DAO ya seria innecesario
+			logger.error(idMedico, de);	
+			throw de;
+			
+		} catch (Exception e) {
+			logger.error(idMedico, e);
+			throw new ServiceException(e);
+			
+		} finally {
+			JDBCUtils.closeConnection(c, commitOrRollback);
+		}
+		return asistido;	
+	}
 
 	
 	@Override

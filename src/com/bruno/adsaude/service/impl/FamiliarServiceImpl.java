@@ -216,9 +216,13 @@ public class FamiliarServiceImpl implements FamiliarService{
 			c.setAutoCommit(false);
 			
 			if (familiar!=null) {
+				if(familiar.getPasswordEncriptada()!=null) {
+					familiar.setPassword(familiar.getPasswordEncriptada());
+				}else {
 				password= PasswordEncryptionUtil.encryptPassword(familiar.getPassword());
 				familiar.setPassword(password);
 				updatedRows =	familiarDAO.update(c, familiar);
+				}
 			}
 			
 			commitOrRollback = true;
