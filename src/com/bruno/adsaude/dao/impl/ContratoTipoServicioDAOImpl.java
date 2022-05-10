@@ -90,7 +90,7 @@ public class ContratoTipoServicioDAOImpl implements ContratoTipoServicioDAO{
 			JDBCUtils.setParameter(stmt, i++, cts2.getDescripcion());
 			}
 			int insertedRows = stmt.executeUpdate();
-			if (insertedRows !=1) {
+			if (insertedRows >=1) {
 				rs = stmt.getGeneratedKeys();
 				while (rs.next()) {
 					for (ContratoTipoServicio cts : contratoTipoServicio) {
